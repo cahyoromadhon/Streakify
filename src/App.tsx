@@ -538,7 +538,7 @@ function App() {
   )
 }
 
-function Logo() { return <div className="flex items-center gap-2.5"><div className="flex h-9 w-9 items-center justify-center rounded-xl accent-bg text-white accent-shadow"><Flame size={19} fill="currentColor" /></div><span className="text-xl font-extrabold tracking-tight">habit<span className="accent-text">ly</span></span></div> }
+function Logo() { return <div className="flex items-center gap-2.5"><div className="flex h-9 w-9 items-center justify-center rounded-xl accent-bg text-white accent-shadow"><Flame size={19} fill="currentColor" /></div><span className="text-xl font-extrabold tracking-tight">Streak<span className="accent-text">ify</span></span></div> }
 function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode; label: string; active?: boolean; onClick?: () => void }) { return <button onClick={onClick} className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${active ? 'accent-nav' : 'text-muted hover:bg-slate-50 hover:text-ink'}`}>{icon}<span>{label}</span>{active && <span className="ml-auto h-1.5 w-1.5 rounded-full accent-bg" />}</button> }
 function DatePickerModal({ dateKey, onClose, onSelect }: { dateKey: string; onClose: () => void; onSelect: (dateKey: string) => void }) {
   const [selectedDateKey, setSelectedDateKey] = useState(dateKey)
