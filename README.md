@@ -76,9 +76,18 @@ Buka URL yang ditampilkan Vite, biasanya `http://localhost:5173`.
 ```bash
 npm run dev      # Menjalankan development server
 npm run build    # Type-check dan build production
+npm run build:desktop # Membuat aplikasi portable Windows (.exe)
+npm run build:installer # Membuat installer Windows NSIS (jalankan di Windows)
 npm test         # Menjalankan Vitest
 npm run preview  # Preview hasil build production
 ```
+
+## Aplikasi Windows
+
+Perintah `npm run build:desktop` menghasilkan aplikasi portable Windows di folder
+`release/`. File `.exe` dapat langsung diunduh dan dijalankan tanpa instalasi.
+Untuk installer Windows dengan shortcut dan pilihan lokasi instalasi, jalankan
+`npm run build:installer` pada Windows.
 
 ## Persistence
 
