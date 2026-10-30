@@ -2,6 +2,21 @@
 
 Streakify adalah aplikasi web **Daily Habit Tracker** untuk membantu pengguna membangun kebiasaan secara konsisten, menyelesaikan task harian, dan memantau progres melalui streak.
 
+## Instalasi aplikasi Windows (.exe)
+
+Pengguna Windows dapat langsung mengunduh dan menjalankan aplikasi Streakify tanpa
+memasang Node.js atau membuka terminal.
+
+1. Unduh [Streakify-Setup-0.1.0.exe](./release/Streakify-Setup-0.1.0.exe).
+2. Buka file `.exe` yang sudah diunduh.
+3. Jika Windows menampilkan peringatan keamanan, pilih **More info** lalu **Run anyway**
+   setelah memastikan file berasal dari sumber yang dipercaya.
+4. Ikuti langkah instalasi sampai selesai.
+5. Jalankan Streakify dari shortcut Desktop atau Start Menu.
+
+Data habit disimpan secara lokal pada komputer pengguna. Gunakan fitur **Export JSON**
+di halaman Setting untuk membuat backup sebelum memindahkan atau menghapus aplikasi.
+
 ## Fitur utama
 
 - Dashboard dengan sidebar layout dan ringkasan daily streak.
@@ -82,10 +97,11 @@ npm test         # Menjalankan Vitest
 npm run preview  # Preview hasil build production
 ```
 
-## Aplikasi Windows
+## Membuat aplikasi Windows dari source code
 
 Perintah `npm run build:desktop` menghasilkan aplikasi portable Windows di folder
-`release/`. File `.exe` dapat langsung diunduh dan dijalankan tanpa instalasi.
+`release/` di dalam project. File `.exe` dapat langsung diunduh
+dan dijalankan tanpa instalasi.
 Untuk installer Windows dengan shortcut dan pilihan lokasi instalasi, jalankan
 `npm run build:installer` pada Windows.
 
