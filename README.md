@@ -23,6 +23,8 @@ Streakify adalah aplikasi web **Daily Habit Tracker** untuk membantu pengguna me
 - Custom icon picker untuk task dan pilihan ikon habit.
 - Konfirmasi hapus custom tanpa browser alert.
 - Penyimpanan lokal menggunakan `localStorage`, sehingga data tetap tersedia setelah refresh.
+- Export dan import JSON agar pengguna memiliki kendali penuh atas backup dan pemindahan data.
+- Halaman Setting penuh untuk mengatur accent color, backup, import, dan reset data.
 - Accent color yang dapat dikustomisasi.
 
 ## Teknologi
@@ -84,5 +86,11 @@ Data aplikasi disimpan di browser melalui LocalStorage:
 
 - `habitly-habits-v1` untuk data habit dan progres.
 - `habitly-theme-color` untuk accent color.
+
+Halaman **Setting** menyediakan export seluruh habit, progres, dan accent color ke file
+JSON, serta import untuk memulihkan backup. Import menggantikan data yang sedang tampil
+setelah file melewati validasi format dasar. Data aplikasi tetap disimpan secara lokal pada
+browser melalui `localStorage`; file JSON dapat digunakan untuk memindahkan data antar
+browser atau perangkat.
 
 Perubahan nama brand tidak mengubah key LocalStorage agar data pengguna lama tetap kompatibel.

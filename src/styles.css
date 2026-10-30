@@ -26,6 +26,7 @@ button { cursor: pointer; }
 .accent-hover-text:hover { color: var(--accent); }
 .accent-complete { border-color: color-mix(in srgb, var(--accent) 35%, white); background-color: color-mix(in srgb, var(--accent) 10%, white); color: var(--accent); }
 .accent-dot { background-color: var(--accent); }
+.date-complete-flame { position: absolute; top: 50%; left: 50%; z-index: 0; transform: translate(-50%, -50%); opacity: 0.2; }
 .date-strip { touch-action: pan-y; isolation: isolate; }
 .frequency-fieldset { position: static; }
 .frequency-options { display: grid; gap: 0.5rem; }

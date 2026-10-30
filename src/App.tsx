@@ -8,6 +8,8 @@ import {
   Check,
   Droplets,
   Dumbbell,
+  Download,
+  FileJson,
   Flame,
   Gift,
   Goal,
@@ -15,6 +17,7 @@ import {
   House,
   Laptop,
   LayoutDashboard,
+  Lock,
   Menu,
   ListChecks,
   Music2,
@@ -32,6 +35,7 @@ import {
   Hash,
   Trash2,
   Utensils,
+  Upload,
   Wallet,
   X,
 } from 'lucide-react'
@@ -157,6 +161,7 @@ function loadHabits(): Habit[] {
 
 function App() {
   const [habits, setHabits] = useState<Habit[]>(loadHabits)
+  const [activeTab, setActiveTab] = useState<'habits' | 'settings'>('habits')
   const [selectedId, setSelectedId] = useState('read')
   const [modal, setModal] = useState<'add' | 'edit' | null>(null)
   const [modalStep, setModalStep] = useState<1 | 2 | 3 | 4>(1)
@@ -472,24 +477,15 @@ function App() {
       <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-slate-100 bg-white px-5 py-7 transition-transform lg:translate-x-0`}>
         <div className="hidden lg:block"><Logo /></div>
         <nav className="mt-12 space-y-2">
-          <NavItem icon={<LayoutDashboard size={18} />} label="Habits" active />
+          <NavItem icon={<LayoutDashboard size={18} />} label="Habits" active={activeTab === 'habits'} onClick={() => setActiveTab('habits')} />
         </nav>
         <div className="mt-auto border-t border-slate-100 pt-7">
-          <NavItem icon={<Settings size={18} />} label="Setting" active={false} />
-          <div className="mt-4 px-3">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Accent color</p>
-            <div className="flex flex-wrap gap-3">
-              {colorOptions.map((color) => <button key={color} type="button" onClick={() => changeThemeColor(color)} style={{ backgroundColor: color }} className={`h-7 w-7 rounded-full transition ${themeColor === color ? 'ring-2 ring-offset-2 ring-violet' : ''}`} aria-label={`Use ${color} theme`} />)}
-              <label className="relative h-7 w-7 cursor-pointer overflow-hidden rounded-full border border-slate-200 bg-[conic-gradient(#f97316,#22c55e,#20a4f3,#8b5cf6,#f97316)]" aria-label="Choose a custom theme color">
-                <input type="color" value={themeColor} onChange={(event) => changeThemeColor(event.target.value)} className="absolute inset-0 cursor-pointer opacity-0" />
-              </label>
-            </div>
-          </div>
+          <NavItem icon={<Settings size={18} />} label="Setting" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
         </div>
       </aside>
       <main className="min-h-screen lg:ml-64">
         <div className="mx-auto max-w-[1440px] px-5 py-7 sm:px-8 lg:px-12 lg:py-10">
-          <>
+          {activeTab === 'habits' ? <>
           <section className="mb-7 relative overflow-hidden rounded-3xl p-6 text-white shadow-soft sm:p-8" style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}cc)` }}>
             <div className="relative z-10 flex flex-wrap items-center justify-between gap-7">
               <div><p className="mb-2 text-sm font-semibold text-indigo-100">Daily streak</p><div className="flex items-end gap-3"><span className="text-7xl font-extrabold tracking-tighter">{getDailyStreak(habits)}</span><span className="mb-3 text-lg font-semibold text-indigo-100">days</span></div><p className="mt-2 text-sm text-indigo-100">Complete every habit to grow your streak.</p></div>
@@ -504,18 +500,18 @@ function App() {
                 const active = isSameDay(date, selectedDate)
                 const dateKey = format(date, 'yyyy-MM-dd')
                 const completed = isHabitListComplete(habits, date)
-                return <button key={date.toISOString()} data-date={dateKey} className={`flex min-h-[68px] min-w-0 flex-col items-center justify-center rounded-xl border py-2 transition ${active ? 'accent-border accent-bg text-white accent-shadow' : completed ? 'accent-complete' : 'border-slate-100 bg-white text-ink hover:border-[#c9c5ff]'}`}><span className="text-[10px] font-bold uppercase opacity-70">{format(date, 'EEE')}</span><span className="mt-1 text-lg font-extrabold">{format(date, 'd')}</span>{isSameDay(date, new Date()) && <span className={`mt-1 h-1 w-1 rounded-full ${active ? 'bg-white' : completed ? 'accent-dot' : 'accent-bg'}`} />}</button>
+                return <button key={date.toISOString()} data-date={dateKey} className={`relative flex min-h-[68px] min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border py-2 transition ${active ? 'accent-border accent-bg text-white accent-shadow' : completed ? 'accent-complete' : 'border-slate-100 bg-white text-ink hover:border-[#c9c5ff]'}`}>{completed && <Flame className={`date-complete-flame ${active ? 'text-white' : 'accent-text'}`} size={62} strokeWidth={1.2} aria-hidden="true" />}<span className="relative z-10 text-[10px] font-bold uppercase opacity-70">{format(date, 'EEE')}</span><span className="relative z-10 mt-1 text-lg font-extrabold">{format(date, 'd')}</span>{isSameDay(date, new Date()) && <span className={`relative z-10 mt-1 h-1 w-1 rounded-full ${active ? 'bg-white' : completed ? 'accent-dot' : 'accent-bg'}`} />}</button>
               })}
             </div>
             </div>
           </div>
-          <section className="relative min-h-[480px] rounded-3xl border border-slate-100 bg-white p-5 shadow-card sm:p-8">
+          <section className="relative min-h-[480px] rounded-3xl border border-slate-100 bg-white p-5 pb-28 shadow-card sm:p-8 sm:pb-32">
               <div className="mb-6 flex items-start justify-between"><div><h2 className="text-lg font-extrabold">{format(selectedDate, 'dd/MM/yyyy')}</h2><p className="mt-1 text-sm text-muted">{completedOnSelectedDate} of {visibleHabits.length} completed</p></div><button onClick={openAdd} className="rounded-lg p-2 accent-text transition hover:bg-[#f4f3ff]" aria-label="Add habit"><Plus size={19} /></button></div>
               <div className="space-y-3">{visibleHabits.map((habit) => <HabitRow key={habit.id} habit={habit} dateKey={selectedDateKey} selected={selectedId === habit.id} onSelect={() => setSelectedId(habit.id)} onToggle={() => toggleDate(habit.id, selectedDate)} onChecklist={() => setChecklistProgress({ habitId: habit.id, dateKey: selectedDateKey })} onValueProgress={() => setValueProgress({ habitId: habit.id, dateKey: selectedDateKey })} onEdit={() => openEdit(habit)} onDelete={() => requestDeleteHabit(habit.id)} />)}</div>
               {visibleHabits.length === 0 && <div className="flex min-h-64 items-center justify-center text-center text-sm text-muted">Ready to build a new habit?</div>}
           <button onClick={openAdd} className="absolute bottom-7 right-7 z-20 flex h-14 w-14 items-center justify-center rounded-full accent-bg text-white accent-shadow transition hover:-translate-y-1" aria-label="Add new habit"><Plus size={24} /></button>
           </section>
-          </>
+          </> : <SettingsPage habits={habits} themeColor={themeColor} onThemeChange={changeThemeColor} onImport={(nextHabits, nextThemeColor) => { persist(nextHabits); if (nextThemeColor) changeThemeColor(nextThemeColor) }} />}
         </div>
       </main>
       {renderHabitModal()}
@@ -540,6 +536,90 @@ function App() {
 
 function Logo() { return <div className="flex items-center gap-2.5"><div className="flex h-9 w-9 items-center justify-center rounded-xl accent-bg text-white accent-shadow"><Flame size={19} fill="currentColor" /></div><span className="text-xl font-extrabold tracking-tight">Streak<span className="accent-text">ify</span></span></div> }
 function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode; label: string; active?: boolean; onClick?: () => void }) { return <button onClick={onClick} className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${active ? 'accent-nav' : 'text-muted hover:bg-slate-50 hover:text-ink'}`}>{icon}<span>{label}</span>{active && <span className="ml-auto h-1.5 w-1.5 rounded-full accent-bg" />}</button> }
+function SettingsPage({ habits, themeColor, onThemeChange, onImport }: { habits: Habit[]; themeColor: string; onThemeChange: (color: string) => void; onImport: (habits: Habit[], themeColor?: string) => void }) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+
+  function exportData() {
+    const payload = { app: 'streakify', version: 1, exportedAt: new Date().toISOString(), habits, themeColor }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `streakify-backup-${format(new Date(), 'yyyy-MM-dd')}.json`
+    link.click()
+    URL.revokeObjectURL(url)
+    setMessage('Data berhasil diexport.')
+    setError('')
+  }
+
+  function importData(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const parsed: unknown = JSON.parse(String(reader.result))
+        if (!parsed || typeof parsed !== 'object' || !('habits' in parsed) || !Array.isArray(parsed.habits) || parsed.habits.some((habit) => !habit || typeof habit !== 'object' || typeof habit.id !== 'string' || typeof habit.name !== 'string' || !Array.isArray(habit.completedDates))) {
+          setError('File JSON tidak sesuai format backup Streakify.')
+          setMessage('')
+          return
+        }
+        const imported = parsed as { habits: Habit[]; themeColor?: unknown }
+        const importedTheme = typeof imported.themeColor === 'string' ? imported.themeColor : undefined
+        onImport(imported.habits, importedTheme)
+        setMessage(`${imported.habits.length} habit berhasil diimport.`)
+        setError('')
+      } catch {
+        setError('File tidak dapat dibaca. Pastikan formatnya JSON yang valid.')
+        setMessage('')
+      }
+    }
+    reader.onerror = () => {
+      setError('File tidak dapat dibaca.')
+      setMessage('')
+    }
+    reader.readAsText(file)
+  }
+
+  function resetData() {
+    if (!window.confirm('Hapus semua habit dan kembalikan ke data awal?')) return
+    onImport(initialHabits, colorOptions[0])
+    setMessage('Data berhasil direset ke data awal.')
+    setError('')
+  }
+
+  return <section className="space-y-6">
+    <div><h1 className="text-2xl font-extrabold">Setting</h1><p className="mt-1 text-sm text-muted">Atur tampilan aplikasi dan kelola data habit kamu.</p></div>
+    <div className="grid gap-6 lg:grid-cols-2">
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-card sm:p-8">
+        <h2 className="text-lg font-extrabold">Accent color</h2>
+        <p className="mt-1 text-sm text-muted">Pilih warna utama untuk tampilan aplikasi.</p>
+        <div className="mt-5 flex flex-wrap gap-4">
+          {colorOptions.map((color) => <button key={color} type="button" onClick={() => onThemeChange(color)} style={{ backgroundColor: color }} className={`h-9 w-9 rounded-full transition ${themeColor === color ? 'ring-2 ring-offset-2 ring-violet' : ''}`} aria-label={`Use ${color} theme`} />)}
+          <label className="relative h-9 w-9 cursor-pointer overflow-hidden rounded-full border border-slate-200 bg-[conic-gradient(#f97316,#22c55e,#20a4f3,#8b5cf6,#f97316)]" aria-label="Choose a custom theme color">
+            <input type="color" value={themeColor} onChange={(event) => onThemeChange(event.target.value)} className="absolute inset-0 cursor-pointer opacity-0" />
+          </label>
+        </div>
+      </section>
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-card sm:p-8">
+        <h2 className="text-lg font-extrabold">Data habit</h2>
+        <p className="mt-1 text-sm text-muted">Simpan atau pindahkan data kamu dalam format JSON.</p>
+        <div className="mt-5 space-y-3">
+        <button type="button" onClick={exportData} className="flex w-full items-center gap-3 rounded-2xl border border-slate-100 p-4 text-left transition hover:border-[var(--accent)] hover:bg-[#fbfaff]"><Download size={19} className="accent-text" /><span><span className="block text-sm font-extrabold">Export JSON</span><span className="mt-1 block text-xs text-muted">Download semua habit, progres, dan tema.</span></span></button>
+        <button type="button" onClick={() => fileInputRef.current?.click()} className="flex w-full items-center gap-3 rounded-2xl border border-slate-100 p-4 text-left transition hover:border-[var(--accent)] hover:bg-[#fbfaff]"><Upload size={19} className="accent-text" /><span><span className="block text-sm font-extrabold">Import JSON</span><span className="mt-1 block text-xs text-muted">Ganti data saat ini dari file backup.</span></span></button>
+        <input ref={fileInputRef} type="file" accept="application/json,.json" onChange={importData} className="hidden" />
+        <div className="flex items-start gap-3 rounded-2xl bg-slate-50 p-4"><FileJson size={18} className="mt-0.5 shrink-0 text-slate-500" /><p className="text-xs leading-relaxed text-muted">Backup saat ini berisi {habits.length} habit. Import akan menggantikan data yang sedang tampil.</p></div>
+        {message && <p className="text-xs font-semibold text-emerald-600" role="status">{message}</p>}
+        {error && <p className="text-xs font-semibold text-rose-500" role="alert">{error}</p>}
+        <button type="button" onClick={resetData} className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-100 px-4 py-3 text-sm font-bold text-rose-500 transition hover:bg-rose-50"><Trash2 size={16} /> Reset ke data awal</button>
+        </div>
+      </section>
+    </div>
+  </section>
+}
 function DatePickerModal({ dateKey, onClose, onSelect }: { dateKey: string; onClose: () => void; onSelect: (dateKey: string) => void }) {
   const [selectedDateKey, setSelectedDateKey] = useState(dateKey)
   const initialDate = dateKey ? parseISO(dateKey) : new Date()
@@ -581,7 +661,7 @@ function DeleteHabitModal({ habitName, onCancel, onConfirm }: { habitName: strin
     </div>
   </div>
 }
-function HabitRow({ habit, dateKey, selected, onSelect, onToggle, onChecklist, onValueProgress, onEdit, onDelete }: { habit: Habit; dateKey: string; selected: boolean; onSelect: () => void; onToggle: () => void; onChecklist: () => void; onValueProgress: () => void; onEdit: () => void; onDelete: () => void }) { const Icon = iconMap[habit.icon]; const done = isHabitCompleteOnDate(habit, dateKey); const hasChecklist = (habit.progressConfig?.checklistItems?.filter(Boolean).length ?? 0) > 0; const requiresValue = habit.progressType === 'numeric' || habit.progressType === 'timer'; return <div onClick={onSelect} className={`group flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition ${selected ? 'border-[#dfdcff] bg-[#fbfaff]' : 'border-transparent hover:border-slate-100 hover:bg-slate-50'}`}><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ backgroundColor: habit.color }}><Icon size={18} /></div><div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{habit.name}</p><div className="mt-1 flex items-center gap-1 text-xs text-muted"><Flame size={12} className="text-flame" fill="currentColor" /> {getStreak(habit, parseISO(dateKey))}</div></div><button onClick={(event) => { event.stopPropagation(); onEdit() }} className="rounded-lg p-2 text-slate-300 opacity-0 transition hover:bg-white accent-hover-text group-hover:opacity-100" aria-label={`Edit ${habit.name}`}><Pencil size={15} /></button><button onClick={(event) => { event.stopPropagation(); onDelete() }} className="rounded-lg p-2 text-slate-300 opacity-0 transition hover:bg-rose-50 hover:text-rose-500 group-hover:opacity-100" aria-label={`Delete ${habit.name}`}><Trash2 size={15} /></button><button onClick={(event) => { event.stopPropagation(); hasChecklist ? onChecklist() : requiresValue ? onValueProgress() : onToggle() }} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 transition ${done ? 'accent-border accent-bg text-white accent-shadow' : 'border-slate-200 text-transparent hover:border-[var(--accent)]'}`} aria-label={hasChecklist ? `Edit checklist progress for ${habit.name}` : requiresValue ? `Enter progress for ${habit.name}` : `Mark ${habit.name} complete on ${dateKey}`}>{done && <Check size={17} strokeWidth={3} />}</button></div> }
+function HabitRow({ habit, dateKey, selected, onSelect, onToggle, onChecklist, onValueProgress, onEdit, onDelete }: { habit: Habit; dateKey: string; selected: boolean; onSelect: () => void; onToggle: () => void; onChecklist: () => void; onValueProgress: () => void; onEdit: () => void; onDelete: () => void }) { const Icon = iconMap[habit.icon]; const done = isHabitCompleteOnDate(habit, dateKey); const locked = isDateInFuture(parseISO(dateKey)); const hasChecklist = (habit.progressConfig?.checklistItems?.filter(Boolean).length ?? 0) > 0; const requiresValue = habit.progressType === 'numeric' || habit.progressType === 'timer'; return <div onClick={onSelect} className={`group flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition ${selected ? 'border-[#dfdcff] bg-[#fbfaff]' : 'border-transparent hover:border-slate-100 hover:bg-slate-50'}`}><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white" style={{ backgroundColor: habit.color }}><Icon size={18} /></div><div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{habit.name}</p><div className="mt-1 flex items-center gap-1 text-xs text-muted"><Flame size={12} className="text-flame" fill="currentColor" /> {getStreak(habit, parseISO(dateKey))}</div></div><button onClick={(event) => { event.stopPropagation(); onEdit() }} className="rounded-lg p-2 text-slate-300 opacity-0 transition hover:bg-white accent-hover-text group-hover:opacity-100" aria-label={`Edit ${habit.name}`}><Pencil size={15} /></button><button onClick={(event) => { event.stopPropagation(); onDelete() }} className="rounded-lg p-2 text-slate-300 opacity-0 transition hover:bg-rose-50 hover:text-rose-500 group-hover:opacity-100" aria-label={`Delete ${habit.name}`}><Trash2 size={15} /></button><button onClick={(event) => { event.stopPropagation(); if (locked) return; hasChecklist ? onChecklist() : requiresValue ? onValueProgress() : onToggle() }} disabled={locked} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 transition ${done ? 'accent-border accent-bg text-white accent-shadow' : locked ? 'cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400' : 'border-slate-200 text-transparent hover:border-[var(--accent)]'}`} aria-label={locked ? `${habit.name} terkunci sampai ${dateKey}` : hasChecklist ? `Edit checklist progress for ${habit.name}` : requiresValue ? `Enter progress for ${habit.name}` : `Mark ${habit.name} complete on ${dateKey}`}>{locked ? <Lock size={15} strokeWidth={2} /> : done ? <Check size={17} strokeWidth={3} /> : null}</button></div> }
 
 function ValueProgressModal({ habit, dateKey, onClose, onSave }: { habit: Habit; dateKey: string; onClose: () => void; onSave: (habitId: string, dateKey: string, value: number) => void }) {
   const isTimer = habit.progressType === 'timer'
